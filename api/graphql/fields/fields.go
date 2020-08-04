@@ -9,7 +9,7 @@ func HandleQuery() graphql.Fields {
 	queryFields := make(graphql.Fields)
 
 	HandleAnimeQuery(&queryFields)
-	// artist.HandleQuery(&queryFields)
+	// anime.HandleQuery(&queryFields)
 	// question.HandleQuery(&queryFields)
 
 	return queryFields
@@ -20,7 +20,7 @@ func HandleMutation() graphql.Fields {
 	mutationFields := make(graphql.Fields)
 
 	HandleAnimeMutation(&mutationFields)
-	// artist.HandleMutation(&mutationFields)
+	// anime.HandleMutation(&mutationFields)
 	// user.HandleMutation(&mutationFields)
 
 	return mutationFields

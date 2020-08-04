@@ -6,7 +6,7 @@ var AnimeType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Anime",
 	Fields: graphql.Fields{
 		"id": &graphql.Field{
-			Type: graphql.Int,
+			Type: graphql.Float,
 		},
 		"title": &graphql.Field{
 			Type: graphql.String,

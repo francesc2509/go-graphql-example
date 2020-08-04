@@ -2,21 +2,23 @@ package services
 
 import (
 	"github.com/francesc2509/go-graphql-example/entities"
+	"time"
+	"fmt"
 )
 
 type animeService struct {}
 
-// Get a slice of artists
+// Get a slice of anime
 func (service *animeService) Get() ([]*entities.Anime, error) {
-	//result, err := repositories.Artist.Get()
+	//result, err := repositories.anime.Get()
 
 	// if err != nil {
 	// 	return nil, err
 	// }
 
-	// // var artists []*entities.Artist
+	// // var anime []*entities.anime
 	// for _, item := range result {
-	// 	artists = append(artists, item.(*entities.Artist))
+	// 	anime = append(anime, item.(*entities.anime))
 	// }
 
 	animes := []*entities.Anime{
@@ -29,9 +31,11 @@ func (service *animeService) Get() ([]*entities.Anime, error) {
 	return animes, nil
 }
 
-// Create an artist
-func (service *animeService) Create(artist *entities.Anime) (*entities.Anime, error) {
-	// err := repositories.Artist.Create(*artist)
+// Create an anime
+func (service *animeService) Create(anime *entities.Anime) (error) {
+	// err := repositories.Anime.Create(*anime)
 
-	return nil, nil
+	anime.Id = time.Now().UnixNano() / int64(time.Millisecond)
+	fmt.Println(anime.Id)
+	return nil
 }

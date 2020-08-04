@@ -5,17 +5,18 @@ import (
 	"github.com/francesc2509/go-graphql-example/api/services"
 	"github.com/francesc2509/go-graphql-example/entities"
 	"github.com/graphql-go/graphql"
+	"fmt"
 )
 
 // HandleQuery adds the graphql fields corresponding to
-// artist queries
+// anime queries
 func HandleAnimeQuery(fields *graphql.Fields) {
 	f := (*fields)
 	f["animeGet"] = get()
 }
 
 // HandleMutation adds the graphql fields corresponding to
-// artist mutations
+// anime mutations
 func HandleAnimeMutation(fields *graphql.Fields) {
 	f := (*fields)
 	f["animeCreate"] = create()
@@ -34,18 +35,21 @@ func create() *graphql.Field {
 	return &graphql.Field{
 		Type: types.AnimeType,
 		Args: graphql.FieldConfigArgument{
-			"name": &graphql.ArgumentConfig{
+			"title": &graphql.ArgumentConfig{
 				Type: graphql.NewNonNull(graphql.String),
 			},
-			"type": &graphql.ArgumentConfig{
-				Type: graphql.NewNonNull(graphql.String),
+			"episodeNo": &graphql.ArgumentConfig{
+				Type: graphql.NewNonNull(graphql.Int),
 			},
 		},
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-			artist := &entities.Anime{}
-			artist.Title = params.Args["title"].(string)
-			artist.EpisodeNo = params.Args["episodeNo"].(uint)
-			return services.Anime.Create(artist)
+			anime := &entities.Anime{}
+			anime.Title = params.Args["title"].(string)
+			anime.EpisodeNo = uint(params.Args["episodeNo"].(int))
+			err := services.Anime.Create(anime)
+
+			fmt.Println(anime)
+			return anime, err
 		},
 	}
 }

@@ -1,7 +1,7 @@
 package entities
 
 type Anime struct {
-	Id int `json:"id"`
+	Id int64 `json:"id"`
 	Title string `json:"title"`
 	EpisodeNo uint `json:"episodeNo"`
 }
