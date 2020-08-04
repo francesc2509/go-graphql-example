@@ -4,8 +4,6 @@ import (
 	"github.com/francesc2509/go-graphql-example/entities"
 )
 
-var Anime = &animeService{}
-
 type animeService struct {}
 
 // Get a slice of artists
