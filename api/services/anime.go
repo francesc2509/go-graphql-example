@@ -1,12 +1,20 @@
 package services
 
 import (
-	"github.com/francesc2509/go-graphql-example/entities"
+	"errors"
 	"time"
-	"fmt"
+
+	"github.com/francesc2509/go-graphql-example/entities"
 )
 
-type animeService struct {}
+var animes = []*entities.Anime{
+	&entities.Anime{
+		Title:     "TTGL",
+		EpisodeNo: 27,
+	},
+}
+
+type animeService struct{}
 
 // Get a slice of anime
 func (service *animeService) Get() ([]*entities.Anime, error) {
@@ -21,21 +29,38 @@ func (service *animeService) Get() ([]*entities.Anime, error) {
 	// 	anime = append(anime, item.(*entities.anime))
 	// }
 
-	animes := []*entities.Anime{
-		&entities.Anime {
-			Title: "TTGL",
-			EpisodeNo: 27,
-		},
-	}
-
 	return animes, nil
 }
 
 // Create an anime
-func (service *animeService) Create(anime *entities.Anime) (error) {
+func (service *animeService) Create(anime *entities.Anime) error {
+	anime.Id = uint64(time.Now().UnixNano() / int64(time.Millisecond))
+
+	animes = append(animes, anime)
+
+	return nil
+}
+
+func (service *animeService) Modify(anime *entities.Anime) (*entities.Anime, error) {
 	// err := repositories.Anime.Create(*anime)
 
-	anime.Id = time.Now().UnixNano() / int64(time.Millisecond)
-	fmt.Println(anime.Id)
-	return nil
+	item, err := findOne(anime)
+
+	if err != nil {
+		return nil, err
+	}
+
+	item.Title = anime.Title
+	item.EpisodeNo = anime.EpisodeNo
+
+	return item, nil
+}
+
+func findOne(anime *entities.Anime) (*entities.Anime, error) {
+	for _, item := range animes {
+		if item.Id == anime.Id {
+			return item, nil
+		}
+	}
+	return nil, errors.New("The anime was not found")
 }
