@@ -1,8 +1,6 @@
 package fields
 
 import (
-	"fmt"
-
 	"github.com/francesc2509/go-graphql-example/api/graphql/types"
 	"github.com/francesc2509/go-graphql-example/api/services"
 	"github.com/francesc2509/go-graphql-example/entities"
@@ -22,6 +20,7 @@ func HandleAnimeMutation(fields *graphql.Fields) {
 	f := (*fields)
 	f["animeCreate"] = create()
 	f["animeModify"] = modify()
+	f["animeDelete"] = delete()
 }
 
 func get() *graphql.Field {
@@ -50,7 +49,6 @@ func create() *graphql.Field {
 			anime.EpisodeNo = uint(params.Args["episodeNo"].(int))
 			err := services.Anime.Create(anime)
 
-			fmt.Println(anime)
 			return anime, err
 		},
 	}
@@ -76,6 +74,22 @@ func modify() *graphql.Field {
 			anime.Title = params.Args["title"].(string)
 			anime.EpisodeNo = uint(params.Args["episodeNo"].(int))
 			anime, err := services.Anime.Modify(anime)
+
+			return anime, err
+		},
+	}
+}
+
+func delete() *graphql.Field {
+	return &graphql.Field{
+		Type: types.AnimeType,
+		Args: graphql.FieldConfigArgument{
+			"id": &graphql.ArgumentConfig{
+				Type: graphql.NewNonNull(graphql.Int),
+			},
+		},
+		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+			anime, err := services.Anime.Delete(uint64(params.Args["id"].(int)))
 
 			return anime, err
 		},

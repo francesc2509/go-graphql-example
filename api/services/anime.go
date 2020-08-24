@@ -18,17 +18,6 @@ type animeService struct{}
 
 // Get a slice of anime
 func (service *animeService) Get() ([]*entities.Anime, error) {
-	//result, err := repositories.anime.Get()
-
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	// // var anime []*entities.anime
-	// for _, item := range result {
-	// 	anime = append(anime, item.(*entities.anime))
-	// }
-
 	return animes, nil
 }
 
@@ -42,13 +31,13 @@ func (service *animeService) Create(anime *entities.Anime) error {
 }
 
 func (service *animeService) Modify(anime *entities.Anime) (*entities.Anime, error) {
-	// err := repositories.Anime.Create(*anime)
-
-	item, err := findOne(anime)
+	idx, err := findIndex(anime.Id)
 
 	if err != nil {
 		return nil, err
 	}
+
+	item := animes[idx]
 
 	item.Title = anime.Title
 	item.EpisodeNo = anime.EpisodeNo
@@ -56,11 +45,24 @@ func (service *animeService) Modify(anime *entities.Anime) (*entities.Anime, err
 	return item, nil
 }
 
-func findOne(anime *entities.Anime) (*entities.Anime, error) {
-	for _, item := range animes {
-		if item.Id == anime.Id {
-			return item, nil
+func (service *animeService) Delete(id uint64) (*entities.Anime, error) {
+	idx, err := findIndex(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	item := animes[idx]
+	animes = append(animes[:idx], animes[idx+1:]...)
+
+	return item, nil
+}
+
+func findIndex(id uint64) (int, error) {
+	for pos, item := range animes {
+		if item.Id == id {
+			return pos, nil
 		}
 	}
-	return nil, errors.New("The anime was not found")
+	return -1, errors.New("The anime was not found")
 }
